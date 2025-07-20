@@ -74,6 +74,8 @@ section {
     object-fit: contain;
     filter: drop-shadow(0 10px 20px rgba(194, 24, 91, 0.3));
     animation: float 3s ease-in-out infinite;
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 /* Twinkling Stars Animation */
@@ -392,6 +394,64 @@ section {
     }
 }
 
+/* Close Button */
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: rgba(194, 24, 91, 0.9);
+    border: none;
+    color: white;
+    font-size: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1002;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-btn:hover {
+    background: rgba(194, 24, 91, 1);
+    transform: scale(1.1);
+}
+
+/* Navigation Buttons */
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(194, 24, 91, 0.8);
+    border: none;
+    color: white;
+    font-size: 18px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1002;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-btn:hover {
+    background: rgba(194, 24, 91, 1);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.prev-btn {
+    left: 20px;
+}
+
+.next-btn {
+    right: 20px;
+}
+
 
 
 /* Final Section */
@@ -645,17 +705,53 @@ section {
     }
     
     #videoPlayer {
-        max-height: 45vh;
-        max-width: 350px;
+        max-height: 55vh;
+        max-width: 380px;
     }
     
-    .video-modal-content {
-        padding: 10px;
+    .video-modal {
+        backdrop-filter: blur(3px);
+    }
+    
+    .video-overlay {
+        background: linear-gradient(135deg, rgba(194, 24, 91, 0.3), rgba(173, 20, 87, 0.3));
     }
     
     .video-player-container {
-        max-width: 95%;
-        max-height: 85%;
+        max-width: 98%;
+        max-height: 90%;
+    }
+    
+    .video-modal-content {
+        padding: 5px;
+    }
+    
+    .video-player-container {
+        max-width: 98%;
+        max-height: 90%;
+    }
+    
+    /* Mobile Button Adjustments */
+    .close-btn {
+        top: 10px;
+        right: 15px;
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+    
+    .nav-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .prev-btn {
+        left: 10px;
+    }
+    
+    .next-btn {
+        right: 10px;
     }
     
     .video-message {

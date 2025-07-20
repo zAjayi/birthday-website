@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             src: 'assets/vids/3.mp4',
             title: 'Celebrating You Today 🎉',
-            wish: 'You\'re a really sweet person.',
+            wish: 'You\'re a really sweet person and yes, that tuck in was necessary. lol',
             loaded: false
         },
         {
@@ -67,13 +67,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const videoWish = document.getElementById('videoWish');
     const videoOverlay = document.querySelector('.video-overlay');
     const giftBox = document.querySelector('.gift-box');
+    const closeVideoBtn = document.getElementById('closeVideoBtn');
+    const prevVideoBtn = document.getElementById('prevVideoBtn');
+    const nextVideoBtn = document.getElementById('nextVideoBtn');
 
     // Gift box click handler
     giftBox.addEventListener('click', function() {
         startVideoPlaylist();
     });
 
-    // Start video playlist with loading optimization
+    // Start video playlist with aggressive mobile optimization
     function startVideoPlaylist() {
         currentVideoIndex = 0;
         videoModal.style.display = 'block';
@@ -83,13 +86,20 @@ document.addEventListener('DOMContentLoaded', function() {
         videoWish.textContent = 'Please wait while we prepare your gift...';
         videoOverlay.classList.add('show');
         
-        // Preload first video
-        preloadVideo(0, () => {
-            playCurrentVideo();
-        });
+        // Skip preloading on mobile for faster initial load
+        if (window.innerWidth <= 768) {
+            setTimeout(() => {
+                playCurrentVideo();
+            }, 100);
+        } else {
+            // Preload first video only on desktop
+            preloadVideo(0, () => {
+                playCurrentVideo();
+            });
+        }
     }
 
-    // Preload video function with mobile optimization
+    // Ultra-fast video loading for mobile
     function preloadVideo(index, callback) {
         if (index >= videoData.length) {
             callback();
@@ -102,15 +112,17 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        // Skip preloading entirely on mobile for maximum speed
+        if (window.innerWidth <= 768) {
+            callback();
+            return;
+        }
+
         const tempVideo = document.createElement('video');
         tempVideo.muted = true;
         tempVideo.preload = 'metadata';
         tempVideo.playsinline = true;
-        
-        // Mobile-specific optimizations
-        if (window.innerWidth <= 768) {
-            tempVideo.preload = 'none';
-        }
+        tempVideo.disablePictureInPicture = true;
         
         tempVideo.addEventListener('loadedmetadata', function() {
             video.loaded = true;
@@ -129,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
         tempVideo.src = video.src;
     }
 
-    // Play current video with mobile performance optimizations
+    // Ultra-fast video playback for mobile
     function playCurrentVideo() {
         if (currentVideoIndex >= videoData.length) {
             // All videos played, close modal
@@ -139,31 +151,88 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const currentVideo = videoData[currentVideoIndex];
         
-        // Mobile-specific preloading (only preload next video on larger screens)
-        if (window.innerWidth > 768 && currentVideoIndex + 1 < videoData.length) {
-            preloadVideo(currentVideoIndex + 1);
-        }
-
+        // No preloading on mobile - load directly
         videoPlayer.src = currentVideo.src;
         videoTitle.textContent = currentVideo.title;
         videoWish.textContent = currentVideo.wish;
 
+        // Update navigation button states
+        updateNavigationButtons();
+
         // Show overlay with message
         videoOverlay.classList.add('show');
 
-        // Mobile-optimized play with reduced overlay time
-        const overlayTime = window.innerWidth <= 768 ? 2000 : 3000;
+        // Extended overlay time (2 seconds longer)
+        const overlayTime = window.innerWidth <= 768 ? 3500 : 5000;
         
+        // Immediate play attempt
         const playPromise = videoPlayer.play();
         if (playPromise !== undefined) {
             playPromise.then(() => {
-                // Hide overlay after shorter time on mobile
+                // Hide overlay quickly on mobile
                 setTimeout(() => {
                     videoOverlay.classList.remove('show');
                 }, overlayTime);
             }).catch(error => {
                 console.log('Video play error:', error);
-                // Continue to next video if current fails
+                // Faster retry on mobile
+                const retryTime = window.innerWidth <= 768 ? 500 : 1000;
+                setTimeout(() => {
+                    currentVideoIndex++;
+                    playCurrentVideo();
+                }, retryTime);
+            });
+        }
+    }
+
+    // Update navigation button states
+    function updateNavigationButtons() {
+        // Previous button
+        if (currentVideoIndex === 0) {
+            prevVideoBtn.style.opacity = '0.5';
+            prevVideoBtn.style.cursor = 'not-allowed';
+        } else {
+            prevVideoBtn.style.opacity = '1';
+            prevVideoBtn.style.cursor = 'pointer';
+        }
+
+        // Next button
+        if (currentVideoIndex === videoData.length - 1) {
+            nextVideoBtn.style.opacity = '0.5';
+            nextVideoBtn.style.cursor = 'not-allowed';
+        } else {
+            nextVideoBtn.style.opacity = '1';
+            nextVideoBtn.style.cursor = 'pointer';
+        }
+    }
+
+    // Play video without overlay (for navigation)
+    function playCurrentVideoWithoutOverlay() {
+        if (currentVideoIndex >= videoData.length) {
+            // All videos played, close modal
+            videoModal.style.display = 'none';
+            return;
+        }
+
+        const currentVideo = videoData[currentVideoIndex];
+        
+        // Load video directly without overlay
+        videoPlayer.src = currentVideo.src;
+        videoTitle.textContent = currentVideo.title;
+        videoWish.textContent = currentVideo.wish;
+
+        // Update navigation button states
+        updateNavigationButtons();
+
+        // Keep overlay hidden for clean viewing
+        videoOverlay.classList.remove('show');
+        
+        // Play video immediately
+        const playPromise = videoPlayer.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.log('Video play error:', error);
+                // Retry on error
                 setTimeout(() => {
                     currentVideoIndex++;
                     playCurrentVideo();
@@ -176,10 +245,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let touchTimer = null;
     let isPaused = false;
 
-    // Touch start event with mobile optimization
+    // Ultra-fast touch response for mobile
     videoPlayer.addEventListener('touchstart', function(e) {
         e.preventDefault();
-        const holdTime = window.innerWidth <= 768 ? 300 : 500; // Faster response on mobile
+        const holdTime = window.innerWidth <= 768 ? 200 : 500; // Ultra-fast response on mobile
         touchTimer = setTimeout(() => {
             if (!videoPlayer.paused) {
                 videoPlayer.pause();
@@ -217,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let isMousePaused = false;
 
     videoPlayer.addEventListener('mousedown', function(e) {
-        const holdTime = window.innerWidth <= 768 ? 300 : 500; // Faster response on mobile
+        const holdTime = window.innerWidth <= 768 ? 200 : 500; // Ultra-fast response on mobile
         mouseTimer = setTimeout(() => {
             if (!videoPlayer.paused) {
                 videoPlayer.pause();
@@ -275,10 +344,35 @@ document.addEventListener('DOMContentLoaded', function() {
         playCurrentVideo();
     });
 
+    // Close button functionality
+    closeVideoBtn.addEventListener('click', function() {
+        videoModal.style.display = 'none';
+        videoPlayer.pause();
+        currentVideoIndex = 0;
+    });
+
+    // Previous video button
+    prevVideoBtn.addEventListener('click', function() {
+        if (currentVideoIndex > 0) {
+            currentVideoIndex--;
+            playCurrentVideoWithoutOverlay();
+        }
+    });
+
+    // Next video button
+    nextVideoBtn.addEventListener('click', function() {
+        if (currentVideoIndex < videoData.length - 1) {
+            currentVideoIndex++;
+            playCurrentVideo();
+        }
+    });
+
     // Close modal on background click
     videoModal.addEventListener('click', function(e) {
         if (e.target === videoModal) {
             videoModal.style.display = 'none';
+            videoPlayer.pause();
+            currentVideoIndex = 0;
         }
     });
 
@@ -286,6 +380,8 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && videoModal.style.display === 'block') {
             videoModal.style.display = 'none';
+            videoPlayer.pause();
+            currentVideoIndex = 0;
         }
     });
     

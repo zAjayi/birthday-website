@@ -42,7 +42,7 @@
                             <div class="star star-6">✨</div>
                         </div>
                         <div class="cake-image">
-                            <img src="assets/img/1.png" alt="Birthday Cake" class="cake-png">
+                            <img src="assets/img/1.png" alt="Birthday Cake" class="cake-png" loading="lazy" decoding="async">
                         </div>
                     </div>
                 </div>
@@ -96,8 +96,23 @@
                     <!-- Video Player Modal -->
                     <div id="videoModal" class="video-modal">
                         <div class="video-modal-content">
+                            <!-- Close Button -->
+                            <button class="close-btn" id="closeVideoBtn">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            
+                            <!-- Previous Button -->
+                            <button class="nav-btn prev-btn" id="prevVideoBtn">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            
+                            <!-- Next Button -->
+                            <button class="nav-btn next-btn" id="nextVideoBtn">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            
                             <div class="video-player-container">
-                                <video id="videoPlayer" muted preload="none" playsinline>
+                                <video id="videoPlayer" muted preload="none" playsinline disablePictureInPicture>
                                     <source src="" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
