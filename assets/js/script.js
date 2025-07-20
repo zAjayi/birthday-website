@@ -20,37 +20,43 @@ document.addEventListener('DOMContentLoaded', function() {
         fadeObserver.observe(element);
     });
     
-    // Video player functionality
+    // Video player functionality with performance optimizations
     const videoData = [
         {
             src: 'assets/vids/1.mp4',
             title: 'Happy Birthday, Beautiful! 💖',
-            wish: 'Your beauty lights up my world. Happy Birthday!'
+            wish: 'Your beauty lights up my world. Happy Birthday!',
+            loaded: false
         },
         {
             src: 'assets/vids/2.mp4',
             title: 'A Special Day for You ✨',
-            wish: 'Your smile is magical. '
+            wish: 'Your smile is magical. ',
+            loaded: false
         },
         {
             src: 'assets/vids/3.mp4',
             title: 'Celebrating You Today 🎉',
-            wish: 'You\'re a really sweet person.'
+            wish: 'You\'re a really sweet person.',
+            loaded: false
         },
         {
             src: 'assets/vids/4.mp4',
             title: 'Wishing You the Best 🌟',
-            wish: 'May all your dreams come true, love.'
+            wish: 'May all your dreams come true, love.',
+            loaded: false
         },
         {
             src: 'assets/vids/5.mp4',
             title: 'You Deserve the World 🌍',
-            wish: 'Your smile is my favorite thing. Love you!'
+            wish: 'Your smile is my favorite thing. Love you!',
+            loaded: false
         },
         {
             src: 'assets/vids/6.mp4',
             title: 'Happy Birthday, Subomi! 🎂',
-            wish: 'You\'re absolutely beautiful. Happy Birthday Subomi!'
+            wish: 'You\'re absolutely beautiful. Happy Birthday Subomi!',
+            loaded: false
         }
     ];
 
@@ -67,14 +73,57 @@ document.addEventListener('DOMContentLoaded', function() {
         startVideoPlaylist();
     });
 
-    // Start video playlist
+    // Start video playlist with loading optimization
     function startVideoPlaylist() {
         currentVideoIndex = 0;
         videoModal.style.display = 'block';
-        playCurrentVideo();
+        
+        // Show loading state
+        videoTitle.textContent = 'Loading...';
+        videoWish.textContent = 'Please wait while we prepare your gift...';
+        videoOverlay.classList.add('show');
+        
+        // Preload first video
+        preloadVideo(0, () => {
+            playCurrentVideo();
+        });
     }
 
-    // Play current video
+    // Preload video function
+    function preloadVideo(index, callback) {
+        if (index >= videoData.length) {
+            callback();
+            return;
+        }
+
+        const video = videoData[index];
+        if (video.loaded) {
+            callback();
+            return;
+        }
+
+        const tempVideo = document.createElement('video');
+        tempVideo.muted = true;
+        tempVideo.preload = 'metadata';
+        
+        tempVideo.addEventListener('loadedmetadata', function() {
+            video.loaded = true;
+            if (index === 0) {
+                callback();
+            }
+        });
+
+        tempVideo.addEventListener('error', function() {
+            console.log('Error loading video:', video.src);
+            if (index === 0) {
+                callback();
+            }
+        });
+
+        tempVideo.src = video.src;
+    }
+
+    // Play current video with performance optimizations
     function playCurrentVideo() {
         if (currentVideoIndex >= videoData.length) {
             // All videos played, close modal
@@ -83,6 +132,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const currentVideo = videoData[currentVideoIndex];
+        
+        // Preload next video in background
+        if (currentVideoIndex + 1 < videoData.length) {
+            preloadVideo(currentVideoIndex + 1);
+        }
+
         videoPlayer.src = currentVideo.src;
         videoTitle.textContent = currentVideo.title;
         videoWish.textContent = currentVideo.wish;
@@ -90,15 +145,23 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show overlay with message
         videoOverlay.classList.add('show');
 
-        // Play video
-        videoPlayer.play().then(() => {
-            // Hide overlay after 3 seconds
-            setTimeout(() => {
-                videoOverlay.classList.remove('show');
-            }, 3000);
-        }).catch(error => {
-            console.log('Video play error:', error);
-        });
+        // Play video with error handling
+        const playPromise = videoPlayer.play();
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                // Hide overlay after 3 seconds
+                setTimeout(() => {
+                    videoOverlay.classList.remove('show');
+                }, 3000);
+            }).catch(error => {
+                console.log('Video play error:', error);
+                // Continue to next video if current fails
+                setTimeout(() => {
+                    currentVideoIndex++;
+                    playCurrentVideo();
+                }, 1000);
+            });
+        }
     }
 
     // Touch and hold functionality for videos

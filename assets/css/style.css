@@ -291,8 +291,10 @@ section {
 #videoPlayer {
     width: 100%;
     height: auto;
-    max-height: 80vh;
+    max-height: 70vh;
+    max-width: 800px;
     display: block;
+    object-fit: contain;
 }
 
 .video-overlay {
@@ -542,6 +544,11 @@ section {
         font-size: 1rem;
     }
     
+    #videoPlayer {
+        max-height: 60vh;
+        max-width: 600px;
+    }
+    
 
     
     .scroll-arrow {
@@ -635,6 +642,11 @@ section {
     
     .pause-message p {
         font-size: 0.9rem;
+    }
+    
+    #videoPlayer {
+        max-height: 50vh;
+        max-width: 400px;
     }
     
     .scroll-arrow {
