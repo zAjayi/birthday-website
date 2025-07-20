@@ -10,8 +10,8 @@ html {
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 50%, #fce4ec 100%);
+    font-family: 'Playfair Display', serif;
+    background: linear-gradient(135deg, #e91e63 0%, #c2185b 50%, #e91e63 100%);
     color: #333;
     line-height: 1.6;
 }
@@ -27,163 +27,161 @@ section {
 
 /* Hero Section */
 .hero-section {
-    background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 50%, #fce4ec 100%);
+    background: linear-gradient(135deg, #e91e63 0%, #c2185b 50%, #e91e63 100%);
     position: relative;
     overflow: hidden;
     padding-bottom: 100px;
 }
 
 .hero-title {
-    font-family: 'Dancing Script', cursive;
+    font-family: 'Great Vibes', cursive;
     font-size: 4rem;
-    font-weight: 700;
-    color: #c2185b;
+    font-weight: 400;
+    color: #2c1810;
     margin-bottom: 1rem;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
 }
 
 .hero-subtitle {
+    font-family: 'Montserrat', sans-serif;
     font-size: 1.2rem;
-    color: #666;
+    color: #4a1c10;
     margin-bottom: 2rem;
-    font-weight: 300;
+    font-weight: 400;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.6);
 }
 
-/* Cake Animation */
-.cake-animation {
+/* Cake Container with PNG and Twinkling Stars */
+.cake-container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 400px;
-}
-
-.cake {
     position: relative;
-    width: 200px;
+}
+
+.cake-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.cake-png {
+    max-width: 250px;
+    max-height: 250px;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 20px rgba(194, 24, 91, 0.3));
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Twinkling Stars Animation */
+.twinkling-stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     height: 200px;
+    overflow: hidden;
 }
 
-.plate {
+.star {
     position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 220px;
-    height: 20px;
-    background: #ddd;
-    border-radius: 50%;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    font-size: 1.5rem;
+    animation: twinkle 2s infinite;
+    opacity: 0;
 }
 
-.layer {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.star-1 {
+    top: 20px;
+    left: 20%;
+    animation-delay: 0s;
 }
 
-.layer-bottom {
-    bottom: 10px;
-    width: 180px;
-    height: 60px;
-    background: linear-gradient(45deg, #f48fb1, #f8bbd9);
+.star-2 {
+    top: 40px;
+    right: 25%;
+    animation-delay: 0.3s;
 }
 
-.layer-middle {
-    bottom: 70px;
-    width: 140px;
-    height: 50px;
-    background: linear-gradient(45deg, #f48fb1, #f8bbd9);
+.star-3 {
+    top: 60px;
+    left: 30%;
+    animation-delay: 0.6s;
 }
 
-.layer-top {
-    bottom: 120px;
-    width: 100px;
-    height: 40px;
-    background: linear-gradient(45deg, #f48fb1, #f8bbd9);
+.star-4 {
+    top: 80px;
+    right: 15%;
+    animation-delay: 0.9s;
 }
 
-.icing {
-    position: absolute;
-    bottom: 160px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100px;
-    height: 20px;
-    background: linear-gradient(45deg, #fff, #fce4ec);
-    border-radius: 50px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.star-5 {
+    top: 100px;
+    left: 60%;
+    animation-delay: 1.2s;
 }
 
-.candle {
-    position: absolute;
-    bottom: 180px;
-    width: 8px;
-    height: 30px;
-    background: linear-gradient(to bottom, #fff, #ffd700);
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.star-6 {
+    top: 120px;
+    right: 40%;
+    animation-delay: 1.5s;
 }
 
-.candle:nth-child(6) {
-    left: 45%;
-}
-
-.candle:nth-child(7) {
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.candle:nth-child(8) {
-    left: 55%;
-}
-
-.flame {
-    position: absolute;
-    top: -15px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 12px;
-    height: 20px;
-    background: linear-gradient(to bottom, #ff6b35, #ffd700);
-    border-radius: 50% 50% 20% 20%;
-    animation: flicker 1.5s infinite alternate;
-}
-
-@keyframes flicker {
+@keyframes twinkle {
     0%, 100% {
-        transform: translateX(-50%) scale(1);
-        opacity: 1;
+        opacity: 0;
+        transform: scale(0.8) rotate(0deg);
+    }
+    25% {
+        opacity: 0.3;
+        transform: scale(1) rotate(90deg);
     }
     50% {
-        transform: translateX(-50%) scale(1.1);
-        opacity: 0.8;
+        opacity: 1;
+        transform: scale(1.2) rotate(180deg);
+    }
+    75% {
+        opacity: 0.7;
+        transform: scale(1) rotate(270deg);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
     }
 }
 
 /* Message Section */
 .message-section {
-    background: linear-gradient(135deg, #f8bbd9 0%, #fce4ec 50%, #f8bbd9 100%);
+    background: linear-gradient(135deg, #c2185b 0%, #e91e63 50%, #c2185b 100%);
     padding-bottom: 100px;
 }
 
 .message-text {
+    font-family: 'Montserrat', sans-serif;
     font-size: 1.3rem;
-    color: #555;
+    color: #fff;
     margin-bottom: 3rem;
     font-weight: 400;
     line-height: 1.8;
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
 .rose-graphic {
     font-size: 4rem;
-    color: #c2185b;
+    color: #fff;
     margin-bottom: 3rem;
     animation: float 3s ease-in-out infinite;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
 @keyframes float {
@@ -197,15 +195,17 @@ section {
 
 /* Gift Section */
 .gift-section {
-    background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 50%, #fce4ec 100%);
+    background: linear-gradient(135deg, #e91e63 0%, #c2185b 50%, #e91e63 100%);
     padding-bottom: 100px;
 }
 
 .gift-description {
+    font-family: 'Montserrat', sans-serif;
     font-size: 1.2rem;
-    color: #555;
+    color: #fff;
     margin-bottom: 3rem;
     font-weight: 400;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
 /* Gift Container */
@@ -218,10 +218,10 @@ section {
 
 .gift-box {
     background: linear-gradient(135deg, #fff, #fce4ec);
-    border: 3px solid #c2185b;
+    border: 3px solid #fff;
     border-radius: 20px;
     padding: 3rem;
-    box-shadow: 0 15px 35px rgba(194, 24, 91, 0.2);
+    box-shadow: 0 15px 35px rgba(255, 255, 255, 0.3);
     cursor: pointer;
     transition: all 0.3s ease;
     max-width: 400px;
@@ -230,19 +230,20 @@ section {
 
 .gift-box:hover {
     transform: translateY(-10px);
-    box-shadow: 0 20px 45px rgba(194, 24, 91, 0.3);
-    border-color: #ad1457;
+    box-shadow: 0 20px 45px rgba(255, 255, 255, 0.4);
+    border-color: #fff;
 }
 
 .gift-title {
-    font-family: 'Dancing Script', cursive;
+    font-family: 'Great Vibes', cursive;
     font-size: 2rem;
     color: #c2185b;
     margin-bottom: 1rem;
-    font-weight: 700;
+    font-weight: 400;
 }
 
 .gift-instruction {
+    font-family: 'Montserrat', sans-serif;
     font-size: 1rem;
     color: #666;
     margin-bottom: 1.5rem;
@@ -393,14 +394,15 @@ section {
 
 /* Final Section */
 .final-section {
-    background: linear-gradient(135deg, #f8bbd9 0%, #fce4ec 50%, #f8bbd9 100%);
+    background: linear-gradient(135deg, #c2185b 0%, #e91e63 50%, #c2185b 100%);
 }
 
 .final-message {
-    font-family: 'Dancing Script', cursive;
+    font-family: 'Great Vibes', cursive;
     font-size: 2.5rem;
-    color: #c2185b;
+    color: #fff;
     margin-bottom: 2rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
 .final-message i {
@@ -420,15 +422,16 @@ section {
 .scroll-arrow {
     display: inline-block;
     font-size: 2rem;
-    color: #c2185b;
+    color: #2c1810;
     text-decoration: none;
     transition: all 0.3s ease;
     animation: bounce 2s infinite;
     margin-top: 2rem;
+    text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
 }
 
 .scroll-arrow:hover {
-    color: #ad1457;
+    color: #4a1c10;
     transform: translateY(5px);
 }
 
@@ -488,49 +491,22 @@ section {
         font-size: 2rem;
     }
     
-    .cake-animation {
+    .cake-container {
         height: 300px;
         margin-bottom: 2rem;
     }
     
-    .cake {
-        width: 150px;
+    .cake-png {
+        max-width: 200px;
+        max-height: 200px;
+    }
+    
+    .star {
+        font-size: 1.2rem;
+    }
+    
+    .twinkling-stars {
         height: 150px;
-    }
-    
-    .layer-bottom {
-        width: 135px;
-        height: 45px;
-    }
-    
-    .layer-middle {
-        width: 105px;
-        height: 37px;
-        bottom: 52px;
-    }
-    
-    .layer-top {
-        width: 75px;
-        height: 30px;
-        bottom: 89px;
-    }
-    
-    .icing {
-        width: 75px;
-        height: 15px;
-        bottom: 119px;
-    }
-    
-    .candle {
-        bottom: 134px;
-        width: 6px;
-        height: 22px;
-    }
-    
-    .flame {
-        width: 9px;
-        height: 15px;
-        top: -11px;
     }
     
     .gift-box {
@@ -610,9 +586,22 @@ section {
         font-size: 1.5rem;
     }
     
-    .cake-animation {
+    .cake-container {
         height: 250px;
         margin-bottom: 1.5rem;
+    }
+    
+    .cake-png {
+        max-width: 150px;
+        max-height: 150px;
+    }
+    
+    .star {
+        font-size: 1rem;
+    }
+    
+    .twinkling-stars {
+        height: 120px;
     }
     
     .gift-box {

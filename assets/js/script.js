@@ -35,12 +35,12 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             src: 'assets/vids/3.mp4',
             title: 'Celebrating You Today 🎉',
-            wish: 'You\'re a really sweet person. Happy Birthday!'
+            wish: 'You\'re a really sweet person.'
         },
         {
             src: 'assets/vids/4.mp4',
             title: 'Wishing You the Best 🌟',
-            wish: 'May all your dreams come true, beautiful!'
+            wish: 'May all your dreams come true, love.'
         },
         {
             src: 'assets/vids/5.mp4',
