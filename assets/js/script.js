@@ -81,8 +81,8 @@ document.addEventListener('DOMContentLoaded', function() {
         currentVideoIndex = 0;
         videoModal.style.display = 'block';
         
-        // Show loading state
-        videoTitle.textContent = 'Loading...';
+        // Show loading state with spinner
+        videoTitle.innerHTML = '<span class="loading-spinner"></span>Loading...';
         videoWish.textContent = 'Please wait while we prepare your gift...';
         videoOverlay.classList.add('show');
         
@@ -169,13 +169,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const playPromise = videoPlayer.play();
         if (playPromise !== undefined) {
             playPromise.then(() => {
-                // Hide overlay quickly on mobile
+                // Hide overlay after specified time
                 setTimeout(() => {
                     videoOverlay.classList.remove('show');
                 }, overlayTime);
             }).catch(error => {
                 console.log('Video play error:', error);
-                // Faster retry on mobile
+                // Show user-friendly error message
+                videoTitle.textContent = 'Video loading...';
+                videoWish.textContent = 'Please wait a moment...';
+                
+                // Retry with exponential backoff
                 const retryTime = window.innerWidth <= 768 ? 500 : 1000;
                 setTimeout(() => {
                     currentVideoIndex++;
@@ -376,16 +380,42 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Close modal on escape key
+    // Keyboard navigation support
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && videoModal.style.display === 'block') {
-            videoModal.style.display = 'none';
-            videoPlayer.pause();
-            currentVideoIndex = 0;
+        if (videoModal.style.display === 'block') {
+            switch(e.key) {
+                case 'Escape':
+                    videoModal.style.display = 'none';
+                    videoPlayer.pause();
+                    currentVideoIndex = 0;
+                    break;
+                case 'ArrowLeft':
+                    if (currentVideoIndex > 0) {
+                        e.preventDefault();
+                        currentVideoIndex--;
+                        playCurrentVideoWithoutOverlay();
+                    }
+                    break;
+                case 'ArrowRight':
+                    if (currentVideoIndex < videoData.length - 1) {
+                        e.preventDefault();
+                        currentVideoIndex++;
+                        playCurrentVideo();
+                    }
+                    break;
+                case ' ':
+                    e.preventDefault();
+                    if (videoPlayer.paused) {
+                        videoPlayer.play();
+                    } else {
+                        videoPlayer.pause();
+                    }
+                    break;
+            }
         }
     });
     
-    // Smooth scrolling for arrow links
+    // Enhanced smooth scrolling for arrow links
     const scrollArrows = document.querySelectorAll('.scroll-arrow');
     
     scrollArrows.forEach(arrow => {
@@ -396,23 +426,44 @@ document.addEventListener('DOMContentLoaded', function() {
             const targetSection = document.querySelector(targetId);
             
             if (targetSection) {
-                targetSection.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
+                // Add offset for better positioning
+                const offset = 20;
+                const targetPosition = targetSection.offsetTop - offset;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
                 });
             }
         });
     });
     
-    // Add some initial animations
+    // Enhanced initial animations with performance optimization
     setTimeout(() => {
         const heroElements = document.querySelectorAll('#hero .fade-in');
         heroElements.forEach((element, index) => {
-            setTimeout(() => {
-                element.classList.add('visible');
-            }, index * 200);
+            // Use requestAnimationFrame for better performance
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    element.classList.add('visible');
+                }, index * 200);
+            });
         });
     }, 500);
+
+    // Cleanup function for better memory management
+    function cleanupVideoModal() {
+        if (videoPlayer) {
+            videoPlayer.pause();
+            videoPlayer.src = '';
+            videoPlayer.load();
+        }
+        currentVideoIndex = 0;
+        videoOverlay.classList.remove('show');
+    }
+
+    // Add cleanup on page unload
+    window.addEventListener('beforeunload', cleanupVideoModal);
 });
 
 // Add some sparkle effects to the cake
