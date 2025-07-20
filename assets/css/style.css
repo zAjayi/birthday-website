@@ -645,8 +645,30 @@ section {
     }
     
     #videoPlayer {
-        max-height: 50vh;
-        max-width: 400px;
+        max-height: 45vh;
+        max-width: 350px;
+    }
+    
+    .video-modal-content {
+        padding: 10px;
+    }
+    
+    .video-player-container {
+        max-width: 95%;
+        max-height: 85%;
+    }
+    
+    .video-message {
+        padding: 1.5rem;
+        max-width: 90%;
+    }
+    
+    .video-message h3 {
+        font-size: 1.8rem;
+    }
+    
+    .video-message p {
+        font-size: 0.85rem;
     }
     
     .scroll-arrow {

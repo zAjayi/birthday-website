@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Preload video function
+    // Preload video function with mobile optimization
     function preloadVideo(index, callback) {
         if (index >= videoData.length) {
             callback();
@@ -105,6 +105,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const tempVideo = document.createElement('video');
         tempVideo.muted = true;
         tempVideo.preload = 'metadata';
+        tempVideo.playsinline = true;
+        
+        // Mobile-specific optimizations
+        if (window.innerWidth <= 768) {
+            tempVideo.preload = 'none';
+        }
         
         tempVideo.addEventListener('loadedmetadata', function() {
             video.loaded = true;
@@ -123,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
         tempVideo.src = video.src;
     }
 
-    // Play current video with performance optimizations
+    // Play current video with mobile performance optimizations
     function playCurrentVideo() {
         if (currentVideoIndex >= videoData.length) {
             // All videos played, close modal
@@ -133,8 +139,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const currentVideo = videoData[currentVideoIndex];
         
-        // Preload next video in background
-        if (currentVideoIndex + 1 < videoData.length) {
+        // Mobile-specific preloading (only preload next video on larger screens)
+        if (window.innerWidth > 768 && currentVideoIndex + 1 < videoData.length) {
             preloadVideo(currentVideoIndex + 1);
         }
 
@@ -145,14 +151,16 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show overlay with message
         videoOverlay.classList.add('show');
 
-        // Play video with error handling
+        // Mobile-optimized play with reduced overlay time
+        const overlayTime = window.innerWidth <= 768 ? 2000 : 3000;
+        
         const playPromise = videoPlayer.play();
         if (playPromise !== undefined) {
             playPromise.then(() => {
-                // Hide overlay after 3 seconds
+                // Hide overlay after shorter time on mobile
                 setTimeout(() => {
                     videoOverlay.classList.remove('show');
-                }, 3000);
+                }, overlayTime);
             }).catch(error => {
                 console.log('Video play error:', error);
                 // Continue to next video if current fails
@@ -164,20 +172,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Touch and hold functionality for videos
+    // Touch and hold functionality for videos with mobile optimization
     let touchTimer = null;
     let isPaused = false;
 
-    // Touch start event
+    // Touch start event with mobile optimization
     videoPlayer.addEventListener('touchstart', function(e) {
         e.preventDefault();
+        const holdTime = window.innerWidth <= 768 ? 300 : 500; // Faster response on mobile
         touchTimer = setTimeout(() => {
             if (!videoPlayer.paused) {
                 videoPlayer.pause();
                 isPaused = true;
                 showPauseOverlay();
             }
-        }, 500); // 500ms hold to pause
+        }, holdTime);
     });
 
     // Touch end event
@@ -208,13 +217,14 @@ document.addEventListener('DOMContentLoaded', function() {
     let isMousePaused = false;
 
     videoPlayer.addEventListener('mousedown', function(e) {
+        const holdTime = window.innerWidth <= 768 ? 300 : 500; // Faster response on mobile
         mouseTimer = setTimeout(() => {
             if (!videoPlayer.paused) {
                 videoPlayer.pause();
                 isMousePaused = true;
                 showPauseOverlay();
             }
-        }, 500);
+        }, holdTime);
     });
 
     videoPlayer.addEventListener('mouseup', function(e) {
@@ -237,14 +247,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Show pause overlay
+    // Show pause overlay with mobile optimization
     function showPauseOverlay() {
         const pauseOverlay = document.createElement('div');
         pauseOverlay.className = 'pause-overlay';
+        const isMobile = window.innerWidth <= 768;
         pauseOverlay.innerHTML = `
             <div class="pause-message">
                 <i class="fas fa-pause"></i>
-                <p>Hold to pause • Release to resume</p>
+                <p>${isMobile ? 'Tap & hold to pause' : 'Hold to pause • Release to resume'}</p>
             </div>
         `;
         document.querySelector('.video-player-container').appendChild(pauseOverlay);
