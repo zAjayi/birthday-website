@@ -519,20 +519,4 @@ document.head.appendChild(style);
 // Trigger sparkles periodically
 setInterval(addSparkles, 5000);
 
-// Add some interactive effects
-document.addEventListener('mousemove', function(e) {
-    const heroSection = document.querySelector('.hero-section');
-    if (heroSection) {
-        const x = e.clientX / window.innerWidth;
-        const y = e.clientY / window.innerHeight;
-        
-        heroSection.style.background = `
-            linear-gradient(
-                ${135 + x * 30}deg, 
-                #fce4ec 0%, 
-                #f8bbd9 ${50 + y * 20}%, 
-                #fce4ec 100%
-            )
-        `;
-    }
-}); 
+ 
